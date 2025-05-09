@@ -32,7 +32,7 @@ public class Cuenta {
       throw new MaximaCantidadDepositosException(3);
     }
 
-    new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);
+    agregarMovimiento(LocalDate.now(), cuanto, true);
   }
 
   public void sacar(double cuanto) {
@@ -50,7 +50,8 @@ public class Cuenta {
       throw new MaximoExtraccionDiarioException(1000, limite);
     }
 
-    new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
+    saldo -= cuanto;
+    agregarMovimiento(LocalDate.now(), cuanto, false);
   }
 
   public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
