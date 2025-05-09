@@ -28,7 +28,7 @@ public class Cuenta {
     }
 
     if (getMovimientos().stream()
-        .filter(movimiento -> movimiento.fueDepositado(LocalDate.now()))
+        .filter(movimiento -> movimiento.fueDepositadoTalFecha(LocalDate.now()))
         .count() >= 3) {
       throw new MaximaCantidadDepositosException(3);
     }
@@ -40,14 +40,17 @@ public class Cuenta {
     if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto);
     }
+
     if (getSaldo() - cuanto < 0) {
       throw new SaldoMenorException(getSaldo());
     }
+
     var montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
     var limite = 1000 - montoExtraidoHoy;
     if (cuanto > limite) {
       throw new MaximoExtraccionDiarioException(1000, limite);
     }
+
     new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
   }
 
@@ -58,7 +61,7 @@ public class Cuenta {
 
   public double getMontoExtraidoA(LocalDate fecha) {
     return getMovimientos().stream()
-        .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
+        .filter(movimiento -> movimiento.fueExtraidoTalFecha(fecha))
         .mapToDouble(Movimiento::getMonto)
         .sum();
   }

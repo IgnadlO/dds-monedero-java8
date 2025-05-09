@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MonederoTest {
@@ -22,6 +23,7 @@ public class MonederoTest {
   @DisplayName("Es posible poner $1500 en una cuenta vacía")
   void Poner() {
     cuenta.poner(1500);
+    assertEquals(1500, cuenta.getSaldo());
   }
 
   @Test
@@ -33,9 +35,11 @@ public class MonederoTest {
   @Test
   @DisplayName("Es posible realizar múltiples depósitos consecutivos")
   void TresDepositos() {
+    cuenta.setSaldo(0);
     cuenta.poner(1500);
     cuenta.poner(456);
     cuenta.poner(1900);
+    assertEquals(3856, cuenta.getSaldo());
   }
 
   @Test
@@ -63,7 +67,8 @@ public class MonederoTest {
   void ExtraerMasDe1000() {
     assertThrows(MaximoExtraccionDiarioException.class, () -> {
       cuenta.setSaldo(5000);
-      cuenta.sacar(1001);
+      cuenta.sacar(500);
+      cuenta.sacar(501);
     });
   }
 
@@ -72,5 +77,7 @@ public class MonederoTest {
   void ExtraerMontoNegativo() {
     assertThrows(MontoNegativoException.class, () -> cuenta.sacar(-500));
   }
+
+
 
 }
