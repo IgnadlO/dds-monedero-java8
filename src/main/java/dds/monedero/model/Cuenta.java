@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cuenta {
-
+  private final int LIMITEDIARIO = 1000;
+  private final int MAXDEPODIARIO = 3;
   private double saldo = 0;
   ColeccionMovimientos movimientos = new ColeccionMovimientos();
 
@@ -28,8 +29,8 @@ public class Cuenta {
       throw new MontoNegativoException(cuanto);
     }
 
-    if (movimientos.cantidadDepositosTalFecha(LocalDate.now()) >= 3) {
-      throw new MaximaCantidadDepositosException(3);
+    if (movimientos.cantidadDepositosTalFecha(LocalDate.now()) >= MAXDEPODIARIO) {
+      throw new MaximaCantidadDepositosException(MAXDEPODIARIO);
     }
 
     agregarMovimiento(LocalDate.now(), cuanto, true);
@@ -45,9 +46,9 @@ public class Cuenta {
     }
 
     var montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
-    var limite = 1000 - montoExtraidoHoy;
+    var limite = LIMITEDIARIO - montoExtraidoHoy;
     if (cuanto > limite) {
-      throw new MaximoExtraccionDiarioException(1000, limite);
+      throw new MaximoExtraccionDiarioException(LIMITEDIARIO, limite);
     }
 
     saldo -= cuanto;
