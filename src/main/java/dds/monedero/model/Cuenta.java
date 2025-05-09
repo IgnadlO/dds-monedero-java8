@@ -16,9 +16,7 @@ public class Cuenta {
   private double saldo = 0;
   ColeccionMovimientos movimientos = new ColeccionMovimientos();
 
-  public Cuenta() {
-    saldo = 0;
-  }
+  public Cuenta() { }
 
   public Cuenta(double montoInicial) {
     saldo = montoInicial;
@@ -45,8 +43,7 @@ public class Cuenta {
       throw new SaldoMenorException(getSaldo());
     }
 
-    var montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
-    var limite = LIMITEDIARIO - montoExtraidoHoy;
+    var limite = LIMITEDIARIO - getMontoExtraidoA(LocalDate.now());
     if (cuanto > limite) {
       throw new MaximoExtraccionDiarioException(LIMITEDIARIO, limite);
     }
@@ -56,20 +53,11 @@ public class Cuenta {
   }
 
   public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
-    var movimiento = new Movimiento(fecha, cuanto, esDeposito);
-    movimientos.add(movimiento);
+    movimientos.add(new Movimiento(fecha, cuanto, esDeposito));
   }
 
   public double getMontoExtraidoA(LocalDate fecha) {
     return movimientos.montoExtraidoTalFecha(fecha);
-  }
-
-  public ColeccionMovimientos getMovimientos() {
-    return movimientos;
-  }
-
-  public void setMovimientos(ColeccionMovimientos movimientos) {
-    this.movimientos = movimientos;
   }
 
   public double getSaldo() {

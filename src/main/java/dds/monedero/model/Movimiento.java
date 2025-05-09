@@ -20,10 +20,6 @@ public class Movimiento {
     return monto;
   }
 
-  public LocalDate getFecha() {
-    return fecha;
-  }
-
   public boolean fueDepositadoTalFecha(LocalDate fecha) {
     return esDeposito && esDeLaFecha(fecha);
   }
