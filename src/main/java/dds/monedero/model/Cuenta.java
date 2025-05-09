@@ -31,6 +31,7 @@ public class Cuenta {
       throw new MaximaCantidadDepositosException(MAXDEPODIARIO);
     }
 
+    saldo += cuanto;
     agregarMovimiento(LocalDate.now(), cuanto, true);
   }
 
