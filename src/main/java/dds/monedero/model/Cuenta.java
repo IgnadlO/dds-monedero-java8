@@ -1,5 +1,6 @@
 package dds.monedero.model;
 
+import dds.monedero.ColeccionMovimientos;
 import dds.monedero.exceptions.MaximaCantidadDepositosException;
 import dds.monedero.exceptions.MaximoExtraccionDiarioException;
 import dds.monedero.exceptions.MontoNegativoException;
@@ -12,7 +13,7 @@ import java.util.List;
 public class Cuenta {
 
   private double saldo = 0;
-  private List<Movimiento> movimientos = new ArrayList<>();
+  ColeccionMovimientos movimientos = new ColeccionMovimientos();
 
   public Cuenta() {
     saldo = 0;
@@ -27,9 +28,7 @@ public class Cuenta {
       throw new MontoNegativoException(cuanto);
     }
 
-    if (getMovimientos().stream()
-        .filter(movimiento -> movimiento.fueDepositadoTalFecha(LocalDate.now()))
-        .count() >= 3) {
+    if (movimientos.cantidadDepositosTalFecha(LocalDate.now()) >= 3) {
       throw new MaximaCantidadDepositosException(3);
     }
 
@@ -60,17 +59,14 @@ public class Cuenta {
   }
 
   public double getMontoExtraidoA(LocalDate fecha) {
-    return getMovimientos().stream()
-        .filter(movimiento -> movimiento.fueExtraidoTalFecha(fecha))
-        .mapToDouble(Movimiento::getMonto)
-        .sum();
+    return movimientos.montoExtraidoTalFecha(fecha);
   }
 
-  public List<Movimiento> getMovimientos() {
+  public ColeccionMovimientos getMovimientos() {
     return movimientos;
   }
 
-  public void setMovimientos(List<Movimiento> movimientos) {
+  public void setMovimientos(ColeccionMovimientos movimientos) {
     this.movimientos = movimientos;
   }
 
